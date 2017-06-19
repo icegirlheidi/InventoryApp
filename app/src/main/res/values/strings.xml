@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Inventory App</string>
+
+    <string name="edit_pet">Edit pet</string>
+
+    <!--Title for deleting all pets in menu item in MainActivity-->
+    <string name="delete_all">Delete all</string>
+
+    <!--Title for saving current pet in menu item in EditorActivity-->
+    <string name="save_pet">Save</string>
+
+    <!--Title for deleting current pet in menu item in EditorActivity-->
+    <string name="delete_pet">Delete</string>
+
+    <!--Title for Ordering current pet in menu item in EditorActivity-->
+    <string name="order_pet">Order</string>
 </resources>
