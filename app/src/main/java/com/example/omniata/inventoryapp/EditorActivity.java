@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -30,5 +32,25 @@ public class EditorActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.save_product:
+                // Do nothing now
+                Toast.makeText(this, "Save product clicked", Toast.LENGTH_SHORT).show();
+                    return true;
+            case R.id.delete_product:
+                // Do nothing now
+                Toast.makeText(this, "Delete product clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.order_product:
+                // Do nothing now
+                Toast.makeText(this, "Order product clicked", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

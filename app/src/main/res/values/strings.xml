@@ -21,6 +21,15 @@
     <!--Hint of name for editor activity [CHAR LIMIT=15]-->
     <string name="name_hint">Name</string>
 
+    <!-- Category title for editor activity [CHAR LIMIT=30]-->
+    <string name="category_title">Category</string>
+
+    <!--Category options for editor activity [CHAR LIMIT=30]-->
+    <string name="food">Food</string>
+    <string name="clothes">Clothes</string>
+    <string name="consumer_goods">Consumer goods</string>
+    <string name="others">Others</string>
+
     <!-- Measurement title for editor activity [CHAR LIMIT=30]-->
     <string name="measurement_title">Measurement</string>
 
@@ -34,7 +43,7 @@
     <string name="quantity_units_pieces">Pieces</string>
 
     <!-- Units for price of the product (€) [CHAR LIMIT=5] -->
-    <string name="price_units_euros">€ / piece</string>
+    <string name="price_units_euros">€</string>
 
     <!--Hint of supplier for editor activity [CHAR LIMIT=15]-->
     <string name="supplier_hint">Supplier</string>

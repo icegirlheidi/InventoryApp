@@ -6,17 +6,17 @@
     tools:context=".EditorActivity">
 
     <item
-        android:id="@+id/save_pet"
+        android:id="@+id/save_product"
         android:title="@string/save_pet"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/delete_pet"
+        android:id="@+id/delete_product"
         android:title="@string/delete_pet"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/order_pet"
+        android:id="@+id/order_product"
         android:title="@string/order_pet"
         app:showAsAction="never"/>
 
