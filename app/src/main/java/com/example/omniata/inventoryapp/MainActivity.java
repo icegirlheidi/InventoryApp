@@ -1,6 +1,8 @@
 package com.example.omniata.inventoryapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
+import com.example.omniata.inventoryapp.data.ProductDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +32,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Read a database
+        ProductDbHelper mDbHelper = new ProductDbHelper(this);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    }
+
+    // Insert method of dummy data
+    private void insertProduct() {
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Pencils");
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, "Hongkong co.");
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 2);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 20);
+
+        // Insert a new row of pencils into provider using ContentResolver
+        getContentResolver().insert(ProductEntry.CONTENT_URI, values);
     }
 
     @Override
@@ -38,10 +59,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if(itemId == R.id.delete_all) {
-            // Do nothing now
-            Toast.makeText(this, "Delete all clicked", Toast.LENGTH_SHORT).show();
-            return true;
+        switch (itemId){
+            case R.id.delete_all:
+                // Do nothing now
+                Toast.makeText(this, "Delete all clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.insert_dummy_data:
+                insertProduct();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

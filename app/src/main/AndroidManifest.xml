@@ -18,8 +18,11 @@
         <activity android:name=".EditorActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/edit_pet">
-
         </activity>
+        <provider
+            android:name=".data.ProductProvider"
+            android:authorities="com.example.omniata.inventoryapp"
+            android:exported="false" />
     </application>
 
 </manifest>

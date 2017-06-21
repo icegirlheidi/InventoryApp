@@ -3,16 +3,19 @@
 
     <string name="edit_pet">Edit Pet</string>
 
-    <!--Title for deleting all pets in menu item in MainActivity [CHAR LIMIT=30]-->
+    <!--Title for deleting all products in menu item in MainActivity [CHAR LIMIT=30]-->
     <string name="delete_all">Delete all</string>
 
-    <!--Title for saving current pet in menu item in EditorActivity [CHAR LIMIT=15]-->
+    <!--Title for inserting dummy data in menu item in MainActivity [CHAR LIMIT=30]-->
+    <string name="insert_dummy_data">Insert dummy data</string>
+
+    <!--Title for saving current product in menu item in EditorActivity [CHAR LIMIT=15]-->
     <string name="save_pet">Save</string>
 
-    <!--Title for deleting current pet in menu item in EditorActivity [CHAR LIMIT=15]-->
+    <!--Title for deleting current product in menu item in EditorActivity [CHAR LIMIT=15]-->
     <string name="delete_pet">Delete</string>
 
-    <!--Title for Ordering current pet in menu item in EditorActivity [CHAR LIMIT=15]-->
+    <!--Title for Ordering current product in menu item in EditorActivity [CHAR LIMIT=15]-->
     <string name="order_pet">Order</string>
 
     <!-- Overview title for editor activity [CHAR LIMIT=30]-->
