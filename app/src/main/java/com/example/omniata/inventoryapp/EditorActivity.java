@@ -35,10 +35,21 @@ public class EditorActivity extends AppCompatActivity {
 
     // Insert user's input into products table
     private void insertProduct() {
+
+        // Get user's input of product name and remove possible space before of after it
         String nameString = mNameTextView.getText().toString().trim();
+
+        // Get user's input of product supplier and remove possible space before of after it
         String supplierString = mSupplierTextView.getText().toString().trim();
 
+        // Get user's input of product price
+        // Remove possible space before or after it
+        // And parse it as int
         int priceInt = Integer.parseInt(mPriceTextView.getText().toString().trim());
+
+        // Get user's input of product quantity
+        // Remove possible space before or after it
+        // And parse it as int
         int quantityInt = Integer.parseInt(mQuantityTextView.getText().toString().trim());
 
         ContentValues values = new ContentValues();
@@ -47,6 +58,7 @@ public class EditorActivity extends AppCompatActivity {
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, priceInt);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityInt);
 
+        // Insert user's input as a new row into provider using ContentResolver
         Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
     }
@@ -62,9 +74,11 @@ public class EditorActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.save_product:
-                // Do nothing now
+                // Insert new product
                 insertProduct();
-                    return true;
+                // Finish current activity and return to MainActivity
+                finish();
+                return true;
             case R.id.delete_product:
                 // Do nothing now
                 Toast.makeText(this, "Delete product clicked", Toast.LENGTH_SHORT).show();

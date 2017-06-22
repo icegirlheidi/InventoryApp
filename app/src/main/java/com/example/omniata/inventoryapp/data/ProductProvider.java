@@ -8,10 +8,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
+
+import org.w3c.dom.Text;
 
 public class ProductProvider extends ContentProvider {
 
@@ -84,6 +87,32 @@ public class ProductProvider extends ContentProvider {
 
     private Uri insertProduct(Uri uri, ContentValues values) {
 
+        String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
+        // Check if user's input of name is empty
+        if (TextUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("Product must have a name");
+        }
+
+        String supplier = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER);
+        // Check if user's input of supplier is empty
+        if (TextUtils.isEmpty(supplier)) {
+            throw new IllegalArgumentException("Product must have a supplier");
+        }
+
+        Integer price = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_PRICE);
+        // Check if user's input of price is smaller than or equal to 0
+        if(price != null && price <= 0) {
+            throw new IllegalArgumentException("Price must be bigger than 0");
+        } else if (price == null || TextUtils.isEmpty(price.toString())) {
+            throw new IllegalArgumentException("Product must have unit price");
+        }
+
+        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        // Check if user's input of quantity is smaller than 0
+        if(quantity != null && quantity < 0) {
+            throw new IllegalArgumentException("Quantity shouldn't be less than 0");
+        }
+
         // Get sqlite database for inserting data
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -106,6 +135,7 @@ public class ProductProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
         return 0;
     }
 
