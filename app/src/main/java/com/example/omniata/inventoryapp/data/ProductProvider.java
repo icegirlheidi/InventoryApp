@@ -67,6 +67,11 @@ public class ProductProvider extends ContentProvider {
                 throw new IllegalArgumentException("Cannot query unknown URI: " + uri);
         }
 
+        // Set notification uri on cursor
+        // If the data at URI changes, we will update the cursor
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+
         // Return the whole product table or a row of product
         return cursor;
     }
@@ -128,6 +133,10 @@ public class ProductProvider extends ContentProvider {
         }
 
         Toast.makeText(getContext(), "The newly inserted product id is: " + id, Toast.LENGTH_SHORT).show();
+
+        // Notify all listener that the data has been changed for products uri
+        // content://com.example.omniata.inventoryapp/products/products
+        getContext().getContentResolver().notifyChange(uri,null);
 
         // Return content uri with the id of the newly added row at the end
         return ContentUris.withAppendedId(uri, id);
