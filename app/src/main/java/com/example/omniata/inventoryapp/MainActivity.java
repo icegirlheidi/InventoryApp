@@ -2,19 +2,32 @@ package com.example.omniata.inventoryapp;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+
 import android.os.Bundle;
+import android.support.v7.widget.ListViewCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 import com.example.omniata.inventoryapp.data.ProductDbHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    ProductCursorAdapter mProductCursorAdapter;
+
+    // A unique identifier for this loader.
+    // Identifiers are scoped to a particular LoaderManager instance.
+    private static final int LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +49,15 @@ public class MainActivity extends AppCompatActivity {
         // Read a database
         ProductDbHelper mDbHelper = new ProductDbHelper(this);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        mProductCursorAdapter = new ProductCursorAdapter(this, null);
+        ListView list = (ListView) findViewById(R.id.list_view);
+        list.setAdapter(mProductCursorAdapter);
+
+        // Start the loader
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
+
 
     // Insert method of dummy data
     private void insertProduct() {
@@ -69,5 +90,33 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                ProductEntry._ID,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER,
+                ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductEntry.COLUMN_PRODUCT_PRICE,
+                ProductEntry.COLUMN_PRODUCT_QUANTITY
+        };
+        return new CursorLoader(
+                this,
+                ProductEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mProductCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mProductCursorAdapter.swapCursor(null);
     }
 }
