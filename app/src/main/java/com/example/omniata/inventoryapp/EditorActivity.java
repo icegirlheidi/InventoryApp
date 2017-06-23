@@ -1,10 +1,14 @@
 package com.example.omniata.inventoryapp;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -15,46 +19,55 @@ import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private EditText mNameTextView;
-    private EditText mSupplierTextView;
-    private EditText mPriceTextView;
-    private EditText mQuantityTextView;
+    private EditText mNameEditText;
+    private EditText mSupplierEditText;
+    private EditText mPriceEditText;
+    private EditText mQuantityEditText;
     private Uri mCurrentProductUri;
+
+    private static final int LOADER_ID = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor_layout);
 
-        mNameTextView = (EditText) findViewById(R.id.product_name);
-        mSupplierTextView = (EditText) findViewById(R.id.product_supplier);
-        mPriceTextView = (EditText) findViewById(R.id.product_unit_price);
-        mQuantityTextView = (EditText) findViewById(R.id.product_quantity);
+        mNameEditText = (EditText) findViewById(R.id.product_name);
+        mSupplierEditText = (EditText) findViewById(R.id.product_supplier);
+        mPriceEditText = (EditText) findViewById(R.id.product_unit_price);
+        mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
 
+        // Get the current product uri passed through intent from MainActivity
         mCurrentProductUri = getIntent().getData();
         Log.e("TEST", "Uri: " + mCurrentProductUri);
+
+        // If there is current product uri passed through intent
+        if (mCurrentProductUri != null) {
+            // Start loader
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        }
     }
 
     // Insert user's input into products table
     private void insertProduct() {
 
         // Get user's input of product name and remove possible space before of after it
-        String nameString = mNameTextView.getText().toString().trim();
+        String nameString = mNameEditText.getText().toString().trim();
 
         // Get user's input of product supplier and remove possible space before of after it
-        String supplierString = mSupplierTextView.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
 
         // Get user's input of product price
         // Remove possible space before or after it
         // And parse it as int
-        int priceInt = Integer.parseInt(mPriceTextView.getText().toString().trim());
+        int priceInt = Integer.parseInt(mPriceEditText.getText().toString().trim());
 
         // Get user's input of product quantity
         // Remove possible space before or after it
         // And parse it as int
-        int quantityInt = Integer.parseInt(mQuantityTextView.getText().toString().trim());
+        int quantityInt = Integer.parseInt(mQuantityEditText.getText().toString().trim());
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
@@ -65,6 +78,16 @@ public class EditorActivity extends AppCompatActivity {
         // Insert user's input as a new row into provider using ContentResolver
         Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
+    }
+
+    // Delete current product
+    private void deleteProduct() {
+
+        if (mCurrentProductUri != null) {
+            getContentResolver().delete(mCurrentProductUri, null, null);
+            Log.e("TEST", "pet deleted: with uri: " + mCurrentProductUri);
+            Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -84,8 +107,10 @@ public class EditorActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.delete_product:
-                // Do nothing now
-                Toast.makeText(this, "Delete product clicked", Toast.LENGTH_SHORT).show();
+                // Delete current product
+                deleteProduct();
+                // Close current activity and return to MainActivity
+                finish();
                 return true;
             case R.id.order_product:
                 // Do nothing now
@@ -93,5 +118,54 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.e("TEST", "onCreateLoader() initiated");
+        String[] projection = {
+                ProductEntry._ID,
+                ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER,
+                ProductEntry.COLUMN_PRODUCT_PRICE,
+                ProductEntry.COLUMN_PRODUCT_QUANTITY
+        };
+        return new CursorLoader(
+                this,
+                mCurrentProductUri,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        // If the cursor has first row, then move to the first row
+        if (cursor.moveToFirst()) {
+
+            // Get the value of name, supplier, price and quantity from cursor
+            String name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
+            String supplier = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
+            int price = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
+            int quantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+
+            // Set the value of name, supplier, price and quantity to edittext view
+            mNameEditText.setText(name);
+            mSupplierEditText.setText(supplier);
+            mPriceEditText.setText(String.valueOf(price));
+            mQuantityEditText.setText(String.valueOf(quantity));
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        // Clear and reset all EditText view in EditorActivity
+        mNameEditText.setText("");
+        mSupplierEditText.setText("");
+        mPriceEditText.setText("");
+        mQuantityEditText.setText("");
     }
 }
