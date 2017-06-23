@@ -1,5 +1,6 @@
 package com.example.omniata.inventoryapp;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,9 +13,11 @@ import android.support.v4.content.Loader;
 
 import android.os.Bundle;
 import android.support.v7.widget.ListViewCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -50,12 +53,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ProductDbHelper mDbHelper = new ProductDbHelper(this);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
+        // Create new cursor adapter
         mProductCursorAdapter = new ProductCursorAdapter(this, null);
+        // Get the listview for showing a list of products
         ListView list = (ListView) findViewById(R.id.list_view);
+        // Set up cursor adapter with listview
         list.setAdapter(mProductCursorAdapter);
 
         // Start the loader
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                intent.setData(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id));
+                startActivity(intent);
+            }
+        });
     }
 
 

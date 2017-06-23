@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ public class EditorActivity extends AppCompatActivity {
     private EditText mSupplierTextView;
     private EditText mPriceTextView;
     private EditText mQuantityTextView;
+    private Uri mCurrentProductUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class EditorActivity extends AppCompatActivity {
         mPriceTextView = (EditText) findViewById(R.id.product_unit_price);
         mQuantityTextView = (EditText) findViewById(R.id.product_quantity);
 
+        mCurrentProductUri = getIntent().getData();
+        Log.e("TEST", "Uri: " + mCurrentProductUri);
     }
 
     // Insert user's input into products table
