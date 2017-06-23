@@ -71,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getContentResolver().insert(ProductEntry.CONTENT_URI, values);
     }
 
+    // Delete all products
+    private void deleteProducts() {
+        getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -82,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int itemId = item.getItemId();
         switch (itemId){
             case R.id.delete_all:
-                // Do nothing now
-                Toast.makeText(this, "Delete all clicked", Toast.LENGTH_SHORT).show();
+                // Delete all products
+                deleteProducts();
                 return true;
             case R.id.insert_dummy_data:
                 insertProduct();

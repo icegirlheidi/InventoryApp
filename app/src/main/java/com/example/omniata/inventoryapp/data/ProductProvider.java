@@ -144,9 +144,37 @@ public class ProductProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            // If uri matches products uri, then delete the whole table
+            case PRODUCTS:
+                return deletePet(uri, selection, selectionArgs);
+            // If uri matches a single product, then delete a single row of product
+            case PRODUCT_ID:
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                return deletePet(uri, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Delete is not supported for uri: " + uri);
+        }
     }
+
+    private int deletePet(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        int rowDeleted = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
+
+        // If more than zero rows are deleted, then notify listener all listeners
+        // that the data has been changed for product uri
+
+        Log.e("TEST", "Id of rows deleted: " + rowDeleted);
+        if(rowDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+
+        // Return the number of rows deleted
+        return rowDeleted;
+    };
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
