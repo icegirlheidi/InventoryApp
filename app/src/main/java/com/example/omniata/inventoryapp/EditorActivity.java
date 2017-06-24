@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +29,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int LOADER_ID = 0;
 
+    private static boolean mProductInputChanged = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText = (EditText) findViewById(R.id.product_supplier);
         mPriceEditText = (EditText) findViewById(R.id.product_unit_price);
         mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
+
+        // Set on touch listener on all edittext view
+        // so that we can know whether they're modified
+        mNameEditText.setOnTouchListener(mOnTouchListener);
+        mSupplierEditText.setOnTouchListener(mOnTouchListener);
+        mPriceEditText.setOnTouchListener(mOnTouchListener);
+        mQuantityEditText.setOnTouchListener(mOnTouchListener);
 
         // Get the current product uri passed through intent from MainActivity
         mCurrentProductUri = getIntent().getData();
@@ -48,9 +59,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    // On touch listener to listen whether any view has been changed
+    // if yes, then we change boolean value of mProductInputChanged to true
+    // which indicates the view has been modified
+    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            mProductInputChanged = true;
+            return false;
+        }
+    };
+
     // Save user's input into products table
     private void saveProduct() {
-        
+
         // Get user's input of product name and remove possible space before of after it
         String nameString = mNameEditText.getText().toString().trim();
 
@@ -80,6 +102,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
         } else {
+            // If current product uri is not null
+            // then it's in editing mode
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
             Toast.makeText(this, "Number of rows updated: " + rowsAffected, Toast.LENGTH_SHORT).show();
         }
