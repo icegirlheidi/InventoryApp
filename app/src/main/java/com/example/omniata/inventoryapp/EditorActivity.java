@@ -2,7 +2,6 @@ package com.example.omniata.inventoryapp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
@@ -50,8 +48,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    // Insert user's input into products table
-    private void insertProduct() {
+    // Save user's input into products table
+    private void saveProduct() {
+
 
         // Get user's input of product name and remove possible space before of after it
         String nameString = mNameEditText.getText().toString().trim();
@@ -75,9 +74,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, priceInt);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityInt);
 
-        // Insert user's input as a new row into provider using ContentResolver
-        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+        // If current product uri is null,
+        // then it's in inserting new product mode
+        if (mCurrentProductUri == null) {
+            // Insert user's input as a new row into provider using ContentResolver
+            Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
+        } else {
+            int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
+            Toast.makeText(this, "Number of rows updated: " + rowsAffected, Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Delete current product
@@ -101,8 +107,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.save_product:
-                // Insert new product
-                insertProduct();
+                // Save product
+                saveProduct();
                 // Finish current activity and return to MainActivity
                 finish();
                 return true;

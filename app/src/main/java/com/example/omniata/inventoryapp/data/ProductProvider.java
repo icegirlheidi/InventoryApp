@@ -178,7 +178,28 @@ public class ProductProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return updateTable(uri, values, selection, selectionArgs);
+            case PRODUCT_ID:
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                return updateTable(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Cannot update table for uri: " + uri);
+        }
+
+    }
+
+    private int updateTable(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Update products database
+        int rowsAffected = db.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // Return number of rows affected
+        return rowsAffected;
     }
 
     @Nullable
