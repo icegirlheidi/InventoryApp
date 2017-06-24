@@ -189,14 +189,18 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot update table for uri: " + uri);
         }
-
     }
 
     private int updateTable(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Update products database
         int rowsAffected = db.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // Notify changes so the ui in MainActivity will be updated automatically
+        getContext().getContentResolver().notifyChange(uri, null);
 
         // Return number of rows affected
         return rowsAffected;

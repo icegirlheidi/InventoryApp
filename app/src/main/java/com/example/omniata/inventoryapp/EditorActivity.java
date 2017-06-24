@@ -50,8 +50,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Save user's input into products table
     private void saveProduct() {
-
-
+        
         // Get user's input of product name and remove possible space before of after it
         String nameString = mNameEditText.getText().toString().trim();
 
