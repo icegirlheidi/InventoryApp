@@ -54,8 +54,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // If there is current product uri passed through intent
         if (mCurrentProductUri != null) {
+            setTitle(getString(R.string.edit_product));
             // Start loader
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        } else {
+            setTitle(getString(R.string.add_new_product));
+
+
         }
     }
 
@@ -117,6 +122,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Log.e("TEST", "pet deleted: with uri: " + mCurrentProductUri);
             Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
+        // If current product uri is null
+        // then it's in adding new product mode
+        if (mCurrentProductUri == null) {
+            MenuItem menuItemDelete = menu.findItem(R.id.delete_product);
+
+            // Then we don't need the delete product item in menu
+            menuItemDelete.setVisible(false);
+
+            // Invalidate the options menu, so the "Delete" menu option can be hidden.
+            invalidateOptionsMenu();
+        }
+        return true;
     }
 
     @Override

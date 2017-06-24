@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Inventory App</string>
 
-    <string name="edit_pet">Edit Pet</string>
+    <!--Title for editing product in <EditorActivity-->
+    <string name="edit_product">Edit Product</string>
+
+    <!--Title for adding new product in EditorActivity-->
+    <string name="add_new_product">Add New Product</string>
 
     <!--Title for deleting all products in menu item in MainActivity [CHAR LIMIT=30]-->
     <string name="delete_all">Delete all</string>

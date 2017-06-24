@@ -16,8 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/edit_pet">
+            android:parentActivityName=".MainActivity">
         </activity>
         <provider
             android:name=".data.ProductProvider"
