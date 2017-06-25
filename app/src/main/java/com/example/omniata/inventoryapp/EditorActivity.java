@@ -1,6 +1,7 @@
 package com.example.omniata.inventoryapp;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -121,6 +123,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getContentResolver().delete(mCurrentProductUri, null, null);
             Log.e("TEST", "pet deleted: with uri: " + mCurrentProductUri);
             Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show();
+            // Leave current activity after deleting current product
+            finish();
         }
     }
 
@@ -159,10 +163,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 finish();
                 return true;
             case R.id.delete_product:
-                // Delete current product
-                deleteProduct();
+                // Show dialog for user to confirm deleting
+                showDeleteConfirmationDialog();
                 // Close current activity and return to MainActivity
-                finish();
+                //finish();
                 return true;
             case R.id.order_product:
                 // Do nothing now
@@ -170,6 +174,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Show dialog if user pressed delete button
+    private void showDeleteConfirmationDialog() {
+        // Create alertdialog builder
+        // which makes the needed info for creating alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.delete_confirmation_message));
+        // Positivie button which is "Delete"
+        builder.setPositiveButton(R.string.delete_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteProduct();
+            }
+        });
+        // Negative button which is "Cancel"
+        builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // Create alert dialog and then show it up
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
