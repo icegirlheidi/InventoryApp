@@ -2,10 +2,12 @@ package com.example.omniata.inventoryapp;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -88,7 +90,36 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // Delete all products
     private void deleteProducts() {
+        // Call delete method in ProductProvider through getContentResolver
         getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
+        // Toast message telling user all products have been deleted
+        Toast.makeText(this, R.string.toast_message_delete_all, Toast.LENGTH_SHORT).show();
+    }
+
+    // Dialog for user to confirm deleting or cancel it
+    private void showDeleteConfirmationDialog() {
+        // Create builder to set up the necessary info for creating alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Message asking user: "Do you really want to delete all products?"
+        builder.setMessage(R.string.delete_all_message);
+        // Delete button which confirm deleting all products
+        builder.setPositiveButton(R.string.delete_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteProducts();
+            }
+        });
+        // Cancel button which cancel deleting and hide dialog
+        builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // Create and show up alert dialog
+        builder.create().show();
     }
 
     @Override
@@ -102,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int itemId = item.getItemId();
         switch (itemId){
             case R.id.delete_all:
-                // Delete all products
-                deleteProducts();
+                // Show dialog for user to confirm deleting all products
+                showDeleteConfirmationDialog();
                 return true;
             case R.id.insert_dummy_data:
                 insertProduct();

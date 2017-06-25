@@ -61,9 +61,16 @@
     <!--Title for delete confirmation dialog of current product-->
     <string name="delete_confirmation_message">Do you really want to delete current product?</string>
 
+    <!--Title for delete confirmation dialog for all products-->
+    <string name="delete_all_message">Do you really want to delete ALL products?</string>
+
     <!--Yes for delete confiramtion dialog-->
     <string name="delete_delete_confirmation">Delete</string>
 
     <!--Cancel for delete confirmation dialog-->
     <string name="cancel_delete_confirmation">Cancel</string>
+
+    <!--Toast message telling user all products have been deleted-->
+    <string name="toast_message_delete_all">All products have been deleted</string>
+
 </resources>
