@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
@@ -31,6 +32,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mSupplierEditText;
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
+    private ImageButton mPlusButton;
+    private ImageButton mMinusButton;
     private Uri mCurrentProductUri;
 
     private static final int LOADER_ID = 0;
@@ -40,7 +43,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private String mNameString;
     private String mSupplierString;
     private int mPrice;
-    private int mQuantity;
+    private int mQuantity = 0;
     private String mEmail;
 
     @Override
@@ -52,6 +55,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText = (EditText) findViewById(R.id.product_supplier);
         mPriceEditText = (EditText) findViewById(R.id.product_unit_price);
         mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
+        mPlusButton = (ImageButton) findViewById(R.id.add_button);
+        mMinusButton = (ImageButton) findViewById(R.id.minus_button);
 
         // Set on touch listener on all edittext view
         // so that we can know whether they're modified
@@ -60,9 +65,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mOnTouchListener);
         mQuantityEditText.setOnTouchListener(mOnTouchListener);
 
+        // Set on increase quantity click listener on plus button
+        mPlusButton.setOnClickListener(mOnClickListenerIncreaseQuantity);
+        // Set on decrease quantity click listener on minus button
+        mMinusButton.setOnClickListener(mOnClickListenerDecreaseQuantity);
+
         // Get the current product uri passed through intent from MainActivity
         mCurrentProductUri = getIntent().getData();
-        Log.e("TEST", "Uri: " + mCurrentProductUri);
 
         // If there is current product uri passed through intent
         if (mCurrentProductUri != null) {
@@ -71,9 +80,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         } else {
             setTitle(getString(R.string.add_new_product));
-
-
         }
+
+
     }
 
     @Override
@@ -100,10 +109,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
+            Log.e("TEST", view + "is touched");
             mProductInputChanged = true;
             return false;
         }
     };
+
+    // On click listener for
+    private View.OnClickListener mOnClickListenerIncreaseQuantity = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.e("TEST", "plus onclicklistener called");
+            Log.e("TEST", "mQuantity is: " + mQuantity);
+            mQuantity++;
+            mQuantityEditText.setText(String.valueOf(mQuantity));
+        }
+    };
+
+    private View.OnClickListener mOnClickListenerDecreaseQuantity = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.e("TEST", "minus onclicklistener called");
+            Log.e("TEST", "mQuantity is: " + mQuantity);
+            mQuantity--;
+            mQuantityEditText.setText(String.valueOf(mQuantity));
+        }
+    };
+
 
     // Save user's input into products table
     private void saveProduct() {
@@ -285,12 +317,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     // Then leave current EditorActivity
                     // and go back to MainActivity
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    Log.e("TEST", "Product input hasn't been changed");
                     return true;
                 }
                 DialogInterface.OnClickListener discardChangeClickListener =
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Log.e("TEST", "Product input has been changed");
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
                             }
                         };

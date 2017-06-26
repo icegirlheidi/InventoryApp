@@ -90,9 +90,11 @@
                     android:id="@+id/product_quantity"
                     style="@style/EditorFieldStyle"
                     android:gravity="center_horizontal"
-
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
                     android:hint="@string/quantity_hint"
-                    android:inputType="number" />
+                    android:inputType="number"/>
+
 
                 <ImageButton
                     android:id="@+id/add_button"
