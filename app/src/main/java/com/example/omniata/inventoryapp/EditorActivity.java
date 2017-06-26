@@ -67,6 +67,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // If user's input hasn't been changed
+        if (!mProductInputChanged) {
+            // then leave current activity and go back to MainActivity
+            finish();
+            return;
+        }
+        final DialogInterface.OnClickListener discardChangeClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                };
+        showUnsavedChangesDialog(discardChangeClickListener);
+    }
+
     // On touch listener to listen whether any view has been changed
     // if yes, then we change boolean value of mProductInputChanged to true
     // which indicates the view has been modified
@@ -181,6 +199,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create and show up dialog
         builder.create().show();
     }
+
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
