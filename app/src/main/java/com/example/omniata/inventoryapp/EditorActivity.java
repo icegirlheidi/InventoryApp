@@ -38,7 +38,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int LOADER_ID = 0;
 
-    private static boolean mProductInputChanged = false;
+    private boolean mProductInputChanged = false;
 
     private String mNameString;
     private String mSupplierString;
@@ -82,25 +82,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTitle(getString(R.string.add_new_product));
         }
 
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        // If user's input hasn't been changed
-        if (!mProductInputChanged) {
-            // then leave current activity and go back to MainActivity
-            finish();
-            return;
-        }
-        final DialogInterface.OnClickListener discardChangeClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                };
-        showUnsavedChangesDialog(discardChangeClickListener);
+        Log.e("TEST", "Initial mProductInputChanged value is: " + mProductInputChanged);
     }
 
     // On touch listener to listen whether any view has been changed
@@ -117,12 +99,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // On click listener for
     private View.OnClickListener mOnClickListenerIncreaseQuantity = new View.OnClickListener() {
+
         @Override
         public void onClick(View v) {
             Log.e("TEST", "plus onclicklistener called");
-            Log.e("TEST", "mQuantity is: " + mQuantity);
             mQuantity++;
             mQuantityEditText.setText(String.valueOf(mQuantity));
+            mProductInputChanged = true;
+            Log.e("TEST", "input has been changed");
+            Log.e("TEST", "mQuantity is: " + mQuantity);
         }
     };
 
@@ -130,12 +115,35 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         @Override
         public void onClick(View v) {
             Log.e("TEST", "minus onclicklistener called");
-            Log.e("TEST", "mQuantity is: " + mQuantity);
-            mQuantity--;
-            mQuantityEditText.setText(String.valueOf(mQuantity));
+            // Make sure the quantity is bigger than 0
+            if (mQuantity > 0) {
+                mQuantity--;
+                mQuantityEditText.setText(String.valueOf(mQuantity));
+                mProductInputChanged = true;
+                Log.e("TEST", "input has been changed");
+                Log.e("TEST", "mQuantity is: " + mQuantity);
+            }
         }
     };
 
+
+    @Override
+    public void onBackPressed() {
+        // If user's input hasn't been changed
+        if (!mProductInputChanged) {
+            // then leave current activity and go back to MainActivity
+            super.onBackPressed();
+            return;
+        }
+        final DialogInterface.OnClickListener discardChangeClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                };
+        showUnsavedChangesDialog(discardChangeClickListener);
+    }
 
     // Save user's input into products table
     private void saveProduct() {
