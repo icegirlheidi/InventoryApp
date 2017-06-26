@@ -42,7 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private String mNameString;
     private String mSupplierString;
-    private int mPrice;
+    private Double mPrice;
     private int mQuantity = 0;
     private String mEmail;
 
@@ -157,7 +157,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Get user's input of product price
         // Remove possible space before or after it
         // And parse it as int
-        mPrice = Integer.parseInt(mPriceEditText.getText().toString().trim());
+        mPrice = Double.parseDouble(mPriceEditText.getText().toString().trim());
 
         // Get user's input of product quantity
         // Remove possible space before or after it
@@ -372,7 +372,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Get the value of name, supplier, price and quantity from cursor
             mNameString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
             mSupplierString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
-            mPrice = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
+            mPrice = cursor.getDouble(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
             mQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
 
             // Set the value of name, supplier, price and quantity to edittext view

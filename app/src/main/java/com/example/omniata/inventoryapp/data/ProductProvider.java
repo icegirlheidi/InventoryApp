@@ -104,7 +104,7 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Product must have a supplier");
         }
 
-        Integer price = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_PRICE);
+        Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
         // Check if user's input of price is smaller than or equal to 0
         if(price != null && price <= 0) {
             throw new IllegalArgumentException("Price must be bigger than 0");
@@ -112,7 +112,7 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Product must have unit price");
         }
 
-        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        Double quantity = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         // Check if user's input of quantity is smaller than 0
         if(quantity != null && quantity < 0) {
             throw new IllegalArgumentException("Quantity shouldn't be less than 0");

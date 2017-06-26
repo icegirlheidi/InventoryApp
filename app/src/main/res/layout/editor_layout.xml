@@ -67,7 +67,7 @@
                     android:id="@+id/product_unit_price"
                     style="@style/EditorFieldStyle"
                     android:hint="@string/unit_price_hint"
-                    android:inputType="number" />
+                    android:inputType="numberDecimal" />
 
                 <TextView
                     style="@style/EditorUnitsStyle"
