@@ -242,9 +242,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // then it's in adding new product mode
         if (mCurrentProductUri == null) {
             MenuItem menuItemDelete = menu.findItem(R.id.delete_product);
-
+            MenuItem menuItemOrder = menu.findItem(R.id.order_product);
             // Then we don't need the delete product item in menu
             menuItemDelete.setVisible(false);
+            menuItemOrder.setVisible(false);
 
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             invalidateOptionsMenu();
@@ -277,7 +278,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.order_product:
                 // Order product
                 orderProduct();
-                Toast.makeText(this, "Order product clicked", Toast.LENGTH_SHORT).show();
                 return true;
             case android.R.id.home:
                 // If no input has been changed
