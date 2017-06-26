@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
@@ -128,6 +129,59 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+
+    // Show dialog if user pressed delete button
+    private void showDeleteConfirmationDialog() {
+        // Create alertdialog builder
+        // which makes the needed info for creating alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.delete_confirmation_message));
+        // Positivie button which is "Delete"
+        builder.setPositiveButton(R.string.delete_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteProduct();
+            }
+        });
+        // Negative button which is "Cancel"
+        builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // Create alert dialog and then show it up
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // Show dialog if user has unsaved changes
+    // Pass in a parameter discardChangeClickListener which will be used in setPositiveButton
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardChangeClickListener) {
+        // Create builder to set up the needed info for creating dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Message asking user:
+        // "You have unsaved changes. Do you really want to leave?"
+        builder.setMessage(R.string.unsaved_changes_message);
+        // Positive answer: Leave
+        // Then finish current activity and go back to MainActivity
+        builder.setPositiveButton(R.string.leave_unsaved_changes, discardChangeClickListener);
+        // Negative answer: Keep editing
+        // Then dismiss dialog
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // Create and show up dialog
+        builder.create().show();
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -172,35 +226,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Do nothing now
                 Toast.makeText(this, "Order product clicked", Toast.LENGTH_SHORT).show();
                 return true;
+            case android.R.id.home:
+                // If no input has been changed
+                if (!mProductInputChanged) {
+                    // Then leave current EditorActivity
+                    // and go back to MainActivity
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
+                DialogInterface.OnClickListener discardChangeClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                            }
+                        };
+                // Show unsaved change dialog with
+                // discardChangeListener passed in as parameter
+                showUnsavedChangesDialog(discardChangeClickListener);
+                return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // Show dialog if user pressed delete button
-    private void showDeleteConfirmationDialog() {
-        // Create alertdialog builder
-        // which makes the needed info for creating alert dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.delete_confirmation_message));
-        // Positivie button which is "Delete"
-        builder.setPositiveButton(R.string.delete_delete_confirmation, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                deleteProduct();
-            }
-        });
-        // Negative button which is "Cancel"
-        builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        // Create alert dialog and then show it up
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
     @Override

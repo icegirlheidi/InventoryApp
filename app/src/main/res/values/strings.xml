@@ -73,4 +73,13 @@
     <!--Toast message telling user all products have been deleted-->
     <string name="toast_message_delete_all">All products have been deleted</string>
 
+    <!--Title for unsaved changes dialog-->
+    <string name="unsaved_changes_message">You have unsaved changes. Do you really want to leave?</string>
+
+    <!--Positive choice for leaving without saving-->
+    <string name="leave_unsaved_changes">Leave</string>
+
+    <!--Negative choice for keeping editing-->
+    <string name="keep_editing">Keep editing</string>
+
 </resources>
