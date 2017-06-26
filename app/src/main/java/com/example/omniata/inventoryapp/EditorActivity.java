@@ -2,6 +2,7 @@ package com.example.omniata.inventoryapp;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
+import org.w3c.dom.Text;
+
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private EditText mNameEditText;
@@ -33,6 +36,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final int LOADER_ID = 0;
 
     private static boolean mProductInputChanged = false;
+
+    private String mNameString;
+    private String mSupplierString;
+    private int mPrice;
+    private int mQuantity;
+    private String mEmail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,26 +109,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void saveProduct() {
 
         // Get user's input of product name and remove possible space before of after it
-        String nameString = mNameEditText.getText().toString().trim();
+        mNameString = mNameEditText.getText().toString().trim();
 
         // Get user's input of product supplier and remove possible space before of after it
-        String supplierString = mSupplierEditText.getText().toString().trim();
+        mSupplierString = mSupplierEditText.getText().toString().trim();
 
         // Get user's input of product price
         // Remove possible space before or after it
         // And parse it as int
-        int priceInt = Integer.parseInt(mPriceEditText.getText().toString().trim());
+        mPrice = Integer.parseInt(mPriceEditText.getText().toString().trim());
 
         // Get user's input of product quantity
         // Remove possible space before or after it
         // And parse it as int
-        int quantityInt = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+        mQuantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
 
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, supplierString);
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, priceInt);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityInt);
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, mNameString);
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, mSupplierString);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, mPrice);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, mQuantity);
 
         // If current product uri is null,
         // then it's in inserting new product mode
@@ -154,7 +163,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // which makes the needed info for creating alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.delete_confirmation_message));
-        // Positivie button which is "Delete"
+        // Positive button which is "Delete"
         builder.setPositiveButton(R.string.delete_delete_confirmation, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -200,6 +209,29 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.create().show();
     }
 
+    // Order current product through email or messaging app
+    private void orderProduct() {
+        //orderIntent.setType("text/plain");
+        String productsToOrder = getString(R.string.order_product_message) + "\n\n"
+                + getString(R.string.name_hint) + ": " + mNameString + "\n"
+                + getString(R.string.quantity_hint) + ": " + mQuantity + "\n"
+                + getString(R.string.unit_price_hint) + ": " + mPrice + " " + getString(R.string.price_units_euros) + "\n\n"
+                + getString(R.string.best_regards);
+        // If we have supplier's email in our database
+        // then we order through email
+        if ( mEmail != null) {
+            Intent orderIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "icegirlheidi@gmail.com"));
+            orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+            orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
+            startActivity(Intent.createChooser(orderIntent, "Order via"));
+        } else {
+            // Otherwise we order through messaging app
+            Intent orderIntent = new Intent(Intent.ACTION_SEND);
+            orderIntent.setType("text/plain");
+            orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
+            startActivity(Intent.createChooser(orderIntent, "Order via"));
+        }
+    }
 
 
     @Override
@@ -243,7 +275,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 //finish();
                 return true;
             case R.id.order_product:
-                // Do nothing now
+                // Order product
+                orderProduct();
                 Toast.makeText(this, "Order product clicked", Toast.LENGTH_SHORT).show();
                 return true;
             case android.R.id.home:
@@ -295,16 +328,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (cursor.moveToFirst()) {
 
             // Get the value of name, supplier, price and quantity from cursor
-            String name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
-            String supplier = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
-            int price = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
-            int quantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+            mNameString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
+            mSupplierString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
+            mPrice = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
+            mQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
 
             // Set the value of name, supplier, price and quantity to edittext view
-            mNameEditText.setText(name);
-            mSupplierEditText.setText(supplier);
-            mPriceEditText.setText(String.valueOf(price));
-            mQuantityEditText.setText(String.valueOf(quantity));
+            mNameEditText.setText(mNameString);
+            mSupplierEditText.setText(mSupplierString);
+            mPriceEditText.setText(String.valueOf(mPrice));
+            mQuantityEditText.setText(String.valueOf(mQuantity));
         }
     }
 

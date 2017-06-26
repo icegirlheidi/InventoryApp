@@ -82,4 +82,12 @@
     <!--Negative choice for keeping editing-->
     <string name="keep_editing">Keep editing</string>
 
+    <!--Subject title for ordering product through email-->
+    <string name="email_subject">Order new product</string>
+
+    <!--Message for ordering product-->
+    <string name="order_product_message">Hello, we would like to order the product with following information from you.</string>
+
+    <!--Part of message for ordering product-->
+    <string name="best_regards">Best regards!</string>
 </resources>
