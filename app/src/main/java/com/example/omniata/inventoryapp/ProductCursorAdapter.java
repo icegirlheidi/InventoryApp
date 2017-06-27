@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.omniata.inventoryapp.data.ProductContract;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
 import org.w3c.dom.Text;
@@ -50,34 +51,48 @@ public class ProductCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, final Cursor cursor) {
 
         final Holder holder = (Holder) view.getTag();
+        final long id;
 
         String name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
         Double price = cursor.getDouble(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
         int quantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+        id = cursor.getLong(cursor.getColumnIndex(ProductEntry._ID));
 
         holder.mNameTextView.setText(name);
         holder.mPriceTextView.setText(String.valueOf(price));
         holder.mQuantityTextView.setText(String.valueOf(quantity));
 
+        // Click sale button to decrease quantity
         holder.mSaleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Get current value of quantity in quantity textview
                 int currentQuantity = Integer.parseInt(holder.mQuantityTextView.getText().toString().trim());
-                currentQuantity--;
-                holder.mQuantityTextView.setText(String.valueOf(currentQuantity));
-
-                ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, currentQuantity);
-
-                String selection = ProductEntry._ID + "=?";
-                long id = cursor.getLong(cursor.getColumnIndex(ProductEntry._ID));
-                String[] selectionArgs = new String[]{String.valueOf(id)};
-                Toast.makeText(view.getContext(), "Clicked item position: " + cursor.getPosition(), Toast.LENGTH_SHORT);
-                view.getContext().getContentResolver().update(
-                        ProductEntry.CONTENT_URI,
-                        values,
-                        selection,
-                        selectionArgs);
+                // Do this if quantity is larger than zero
+                if (currentQuantity > 0) {
+                    // Decrease quantity by one
+                    currentQuantity--;
+                    // Set the decreased value of quantity to quantity textview
+                    holder.mQuantityTextView.setText(String.valueOf(currentQuantity));
+                    // Create new ContentValue
+                    ContentValues values = new ContentValues();
+                    // Connect current quantity with quantity column
+                    values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, currentQuantity);
+                    // Select column with id = ?
+                    String selection = ProductEntry._ID + "=?";
+                    // id of current product
+                    String[] selectionArgs = new String[]{String.valueOf(id)};
+                    // Update database
+                    view.getContext().getContentResolver().update(
+                            ProductEntry.CONTENT_URI,
+                            values,
+                            selection,
+                            selectionArgs);
+                } else {
+                    String currentName = holder.mNameTextView.getText().toString().trim();
+                    // Otherwise show toast message
+                    Toast.makeText(view.getContext(), currentName + " out of stock", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

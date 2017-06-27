@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(dialog != null) {
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.delete_all:
                 // Show dialog for user to confirm deleting all products
                 showDeleteConfirmationDialog();
