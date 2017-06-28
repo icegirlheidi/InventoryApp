@@ -102,4 +102,7 @@
 
     <!--Part of message for ordering product-->
     <string name="best_regards">Best regards!</string>
+
+    <string name="dummy_data_image_uri">android.resource://com.example.omniata.inventoryapp/drawable/valio_rahka</string>
+
 </resources>

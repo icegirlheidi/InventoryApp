@@ -52,7 +52,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Double mPrice;
     private int mQuantity = 0;
     private String mEmail;
-    
+
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
 
