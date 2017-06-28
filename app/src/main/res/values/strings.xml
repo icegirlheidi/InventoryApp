@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Inventory App</string>
 
+    <!--Title for empty view-->
+    <string name="empty_view_title">It\'s a bit empty here</string>
+
+    <!--Subtitle for empty view-->
+    <string name="empty_view_subtitle">Start by clicking the plus button</string>
+
     <!--Title for editing product in <EditorActivity-->
     <string name="edit_product">Edit Product</string>
 

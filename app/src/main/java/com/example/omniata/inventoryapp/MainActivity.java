@@ -59,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProductCursorAdapter = new ProductCursorAdapter(this, null);
         // Get the listview for showing a list of products
         ListView list = (ListView) findViewById(R.id.list_view);
+
+        // Get empty view
+        View emptyView = findViewById(R.id.empty_view);
+        // Set empty view to list
+        list.setEmptyView(emptyView);
+
         // Set up cursor adapter with listview
         list.setAdapter(mProductCursorAdapter);
 
