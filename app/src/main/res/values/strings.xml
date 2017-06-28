@@ -64,6 +64,12 @@
     <!--Hint of picture for editor activity [CHAR LIMIT=15]-->
     <string name="picture_hint">Picture</string>
 
+    <!-- Image title for editor activity [CHAR LIMIT=30]-->
+    <string name="image_title">Image</string>
+
+    <!-- Title for select image button in editor activity [CHAR LIMIT=30]-->
+    <string name="select_image">Select image</string>
+
     <!--Title for delete confirmation dialog of current product-->
     <string name="delete_confirmation_message">Do you really want to delete current product?</string>
 

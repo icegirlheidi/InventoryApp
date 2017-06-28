@@ -1,14 +1,19 @@
 package com.example.omniata.inventoryapp;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -35,6 +41,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private ImageButton mPlusButton;
     private ImageButton mMinusButton;
     private Uri mCurrentProductUri;
+    private Button mSelectImageButton;
 
     private static final int LOADER_ID = 0;
 
@@ -45,6 +52,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Double mPrice;
     private int mQuantity = 0;
     private String mEmail;
+    
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +67,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
         mPlusButton = (ImageButton) findViewById(R.id.add_button);
         mMinusButton = (ImageButton) findViewById(R.id.minus_button);
+        mSelectImageButton = (Button) findViewById(R.id.select_image_button);
 
         // Set on touch listener on all edittext view
         // so that we can know whether they're modified
@@ -69,6 +80,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPlusButton.setOnClickListener(mOnClickListenerIncreaseQuantity);
         // Set on decrease quantity click listener on minus button
         mMinusButton.setOnClickListener(mOnClickListenerDecreaseQuantity);
+
+        // Set on select image click listener on select image button
+        mSelectImageButton.setOnClickListener(mOnClickListenerSelectImage);
 
         // Get the current product uri passed through intent from MainActivity
         mCurrentProductUri = getIntent().getData();
@@ -97,7 +111,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
-    // On click listener for
+    // On click listener to increase quantity
     private View.OnClickListener mOnClickListenerIncreaseQuantity = new View.OnClickListener() {
 
         @Override
@@ -111,6 +125,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
+    // On click listener to decrease quantity
     private View.OnClickListener mOnClickListenerDecreaseQuantity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -126,6 +141,51 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
+    // Open up gallery through intent
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), 0);
+    }
+
+    // On click listener to select image
+    private View.OnClickListener mOnClickListenerSelectImage = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // Permission defined in AndroidManifest to allow our app
+            // to read external storage
+            int permissionCheck = ContextCompat.checkSelfPermission(EditorActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            // If we don't have permission to read external storage
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                // Then we request the permission to read and write external storage
+                ActivityCompat.requestPermissions(EditorActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+            selectImage();
+        }
+    };
+
+    // This method is invoked when user responds to our app's permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                // If request is granted, the result arrays is no longer empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        // Then we invoke selectImage method
+                        // when we get permission to read external storage
+                        selectImage();
+                }
+                return;
+            default:
+                Toast.makeText(EditorActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     @Override
     public void onBackPressed() {
@@ -214,7 +274,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.setNegativeButton(R.string.cancel_delete_confirmation, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(dialog != null) {
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -240,7 +300,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(dialog != null) {
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -259,7 +319,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 + getString(R.string.best_regards);
         // If we have supplier's email in our database
         // then we order through email
-        if ( mEmail != null) {
+        if (mEmail != null) {
             Intent orderIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "icegirlheidi@gmail.com"));
             orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
             orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
