@@ -55,7 +55,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private String mNameString;
     private String mSupplierString;
-    private Double mPrice;
+    private Double mPrice = 0.0;
     private int mQuantity = 0;
     private String mEmail;
 
@@ -148,7 +148,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 mQuantityEditText.setText(String.valueOf(mQuantity));
                 mProductInputChanged = true;
                 Log.e("TEST", "input has been changed");
-                Log.e("TEST", "mQuantity is: " + mQuantity);
+            } else if (mQuantity == 0) {
+                Toast.makeText(EditorActivity.this,
+                        mNameString + getString(R.string.product_out_of_stock),
+                        Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -279,17 +282,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(this, getString(R.string.toast_msg_empty_quantity), Toast.LENGTH_LONG).show();
             return;
         }
-        
+
         // And parse it as int
         mPrice = Double.parseDouble(priceString);
-        if (mPrice <= 0) {
+        if (mPrice < 0) {
             Toast.makeText(this, getString(R.string.toast_msg_price_less_than_zero), Toast.LENGTH_LONG).show();
             return;
         }
 
         // And parse it as int
         mQuantity = Integer.parseInt(quantityString);
-        if (mQuantity <= 0) {
+        if (mQuantity < 0) {
             Toast.makeText(this, getString(R.string.toast_msg_quantity_less_than_zero), Toast.LENGTH_LONG).show();
             return;
         }
@@ -306,7 +309,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentProductUri == null) {
             // Insert user's input as a new row into provider using ContentResolver
             Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
-
         } else {
             // If current product uri is not null
             // then it's in editing mode

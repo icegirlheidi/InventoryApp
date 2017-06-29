@@ -85,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // Insert method of dummy data
     private void insertProduct() {
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Pencils");
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, "Hongkong co.");
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 2);
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Valio Protein Rahka");
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, "Valio");
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 1.4);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 20);
         values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, getString(R.string.dummy_data_image_uri));
 

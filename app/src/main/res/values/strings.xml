@@ -126,5 +126,7 @@
     <!--Toast message for empty product image-->
     <string name="toast_msg_empty_image">Product must have an image</string>
 
+    <!--Toast message warning user product is out of stock-->
+    <string name="product_out_of_stock"> out of stock</string>
 
 </resources>
