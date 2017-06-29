@@ -19,6 +19,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -202,9 +203,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // If request is granted, the result arrays is no longer empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        // Then we invoke selectImage method
-                        // when we get permission to read external storage
-                        selectImage();
+                    // Then we invoke selectImage method
+                    // when we get permission to read external storage
+                    selectImage();
                 }
                 return;
             default:
@@ -242,13 +243,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Get user's input of product price
         // Remove possible space before or after it
-        // And parse it as int
-        mPrice = Double.parseDouble(mPriceEditText.getText().toString().trim());
+        String priceString = mPriceEditText.getText().toString().trim();
 
         // Get user's input of product quantity
         // Remove possible space before or after it
+        String quantityString = mQuantityEditText.getText().toString().trim();
+
+        // If no input has been typed, then return
+        if (TextUtils.isEmpty(mNameString) && TextUtils.isEmpty(mSupplierString)
+                && TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString)
+                && mImageUri == null) {
+            return;
+        }
+
         // And parse it as int
-        mQuantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+        mPrice = Double.parseDouble(priceString);
+
+        // And parse it as int
+        mQuantity = Integer.parseInt(quantityString);
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, mNameString);
@@ -282,7 +294,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             finish();
         }
     }
-
 
     // Show dialog if user pressed delete button
     private void showDeleteConfirmationDialog() {
@@ -359,7 +370,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             startActivity(Intent.createChooser(orderIntent, "Order via"));
         }
     }
-
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

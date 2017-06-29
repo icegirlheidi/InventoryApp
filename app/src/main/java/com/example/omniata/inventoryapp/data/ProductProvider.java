@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.omniata.inventoryapp.R;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
 import org.w3c.dom.Text;
@@ -95,32 +96,32 @@ public class ProductProvider extends ContentProvider {
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         // Check if user's input of name is empty
         if (TextUtils.isEmpty(name)) {
-            throw new IllegalArgumentException("Product must have a name");
+            Toast.makeText(getContext(), R.string.toast_msg_empty_name, Toast.LENGTH_SHORT).show();
         }
 
         String supplier = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER);
         // Check if user's input of supplier is empty
         if (TextUtils.isEmpty(supplier)) {
-            throw new IllegalArgumentException("Product must have a supplier");
+            Toast.makeText(getContext(), R.string.toast_msg_empty_supplier, Toast.LENGTH_SHORT).show();
         }
 
         Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
         // Check if user's input of price is smaller than or equal to 0
         if(price != null && price <= 0) {
-            throw new IllegalArgumentException("Price must be bigger than 0");
+            Toast.makeText(getContext(), R.string.toast_msg_price_less_than_zero, Toast.LENGTH_SHORT).show();
         } else if (price == null || TextUtils.isEmpty(price.toString())) {
-            throw new IllegalArgumentException("Product must have unit price");
+            Toast.makeText(getContext(), R.string.toast_msg_empty_price, Toast.LENGTH_SHORT).show();
         }
 
         Double quantity = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         // Check if user's input of quantity is smaller than 0
         if(quantity != null && quantity < 0) {
-            throw new IllegalArgumentException("Quantity shouldn't be less than 0");
+            Toast.makeText(getContext(), R.string.toast_msg_quantity_less_than_zero, Toast.LENGTH_SHORT).show();
         }
 
         String imageUri = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
         if (imageUri == null) {
-            throw new IllegalArgumentException("Product must have an image");
+            Toast.makeText(getContext(), R.string.toast_msg_empty_image, Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(getContext(), "The inserted product image uri is: " + imageUri, Toast.LENGTH_SHORT).show();
 

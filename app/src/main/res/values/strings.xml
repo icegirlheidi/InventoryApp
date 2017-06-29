@@ -103,6 +103,25 @@
     <!--Part of message for ordering product-->
     <string name="best_regards">Best regards!</string>
 
+    <!--Image uri for inserting dummy data-->
     <string name="dummy_data_image_uri">android.resource://com.example.omniata.inventoryapp/drawable/valio_rahka</string>
+
+    <!--Toast message for empty product name-->
+    <string name="toast_msg_empty_name">Product must have a name</string>
+    <!--Toast message for empty product supplier-->
+    <string name="toast_msg_empty_supplier">Product must have a supplier</string>
+
+    <!--Toast message for price lower than 0-->
+    <string name="toast_msg_price_less_than_zero">Product\'s price cannot be less than zero</string>
+
+    <!--Toast message for empty product price-->
+    <string name="toast_msg_empty_price">Product must have a price</string>
+
+    <!--Toast message for empty product quantity-->
+    <string name="toast_msg_quantity_less_than_zero">Product\'s quantity cannot be less than zero</string>
+
+    <!--Toast message for empty product image-->
+    <string name="toast_msg_empty_image">Product must have an image</string>
+
 
 </resources>
