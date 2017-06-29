@@ -1,6 +1,7 @@
 package com.example.omniata.inventoryapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
@@ -34,6 +36,8 @@ import org.w3c.dom.Text;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    Uri imageUri;
+    private ImageView mImageView;
     private EditText mNameEditText;
     private EditText mSupplierEditText;
     private EditText mPriceEditText;
@@ -55,12 +59,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
+    // Request code created from image request
+    private static final int IMAGE_REQUEST = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor_layout);
 
+        mImageView = (ImageView) findViewById(R.id.image_view);
         mNameEditText = (EditText) findViewById(R.id.product_name);
         mSupplierEditText = (EditText) findViewById(R.id.product_supplier);
         mPriceEditText = (EditText) findViewById(R.id.product_unit_price);
@@ -145,7 +153,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), 0);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), IMAGE_REQUEST);
     }
 
     // On click listener to select image
@@ -167,6 +175,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             selectImage();
         }
     };
+
+    // This is invoked after startActivityForResult method been called
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // If there is an intent passed in
+            if (intent != null) {
+                // Get the data from intent
+                imageUri = intent.getData();
+                // Set image uri to image view
+                mImageView.setImageURI(imageUri);
+                mImageView.invalidate();
+            }
+        }
+    }
 
     // This method is invoked when user responds to our app's permission request
     @Override
