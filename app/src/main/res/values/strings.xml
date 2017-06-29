@@ -118,6 +118,9 @@
     <string name="toast_msg_empty_price">Product must have a price</string>
 
     <!--Toast message for empty product quantity-->
+    <string name="toast_msg_empty_quantity">Product must have quantity</string>
+
+    <!--Toast message for product's quantity less than zero-->
     <string name="toast_msg_quantity_less_than_zero">Product\'s quantity cannot be less than zero</string>
 
     <!--Toast message for empty product image-->

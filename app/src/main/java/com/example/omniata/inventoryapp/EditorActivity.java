@@ -234,7 +234,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Save user's input into products table
     private void saveProduct() {
-
         // Get user's input of product name and remove possible space before of after it
         mNameString = mNameEditText.getText().toString().trim();
 
@@ -253,14 +252,47 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (TextUtils.isEmpty(mNameString) && TextUtils.isEmpty(mSupplierString)
                 && TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString)
                 && mImageUri == null) {
+            finish();
+            return;
+        }
+
+        // Show toast message if user's input of name is empty
+        if (TextUtils.isEmpty(mNameString)) {
+            Toast.makeText(this, getString(R.string.toast_msg_empty_name), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Show toast message if user's input of supplier is empty
+        if (TextUtils.isEmpty(mSupplierString)) {
+            Toast.makeText(this, getString(R.string.toast_msg_empty_supplier), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Show toast message if user's input of price is empty
+        if (TextUtils.isEmpty(priceString)) {
+            Toast.makeText(this, getString(R.string.toast_msg_empty_price), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Show toast message if user's input of quantity is empty
+        if (TextUtils.isEmpty(quantityString)) {
+            Toast.makeText(this, getString(R.string.toast_msg_empty_quantity), Toast.LENGTH_LONG).show();
+            return;
+        }
+        
+        // And parse it as int
+        mPrice = Double.parseDouble(priceString);
+        if (mPrice <= 0) {
+            Toast.makeText(this, getString(R.string.toast_msg_price_less_than_zero), Toast.LENGTH_LONG).show();
             return;
         }
 
         // And parse it as int
-        mPrice = Double.parseDouble(priceString);
-
-        // And parse it as int
         mQuantity = Integer.parseInt(quantityString);
+        if (mQuantity <= 0) {
+            Toast.makeText(this, getString(R.string.toast_msg_quantity_less_than_zero), Toast.LENGTH_LONG).show();
+            return;
+        }
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, mNameString);
@@ -281,6 +313,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
             Toast.makeText(this, "Number of rows updated: " + rowsAffected, Toast.LENGTH_SHORT).show();
         }
+        // Finish current activity and return to MainActivity
+        finish();
     }
 
     // Delete current product
@@ -403,8 +437,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.save_product:
                 // Save product
                 saveProduct();
-                // Finish current activity and return to MainActivity
-                finish();
                 return true;
             case R.id.delete_product:
                 // Show dialog for user to confirm deleting
@@ -480,6 +512,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPriceEditText.setText(String.valueOf(mPrice));
             mQuantityEditText.setText(String.valueOf(mQuantity));
             mImageView.setImageURI(mImageUri);
+            Log.e("TEST", "image uri is: " + mImageView);
         }
     }
 
