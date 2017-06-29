@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract;
@@ -158,8 +160,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Open up gallery through intent
     private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent();
         intent.setType("image/*");
+
+        // If android version is older than android 4.4 (KITKAT), then set action as action get content
+        // Otherwise, set it as action open document
+        String action = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? Intent.ACTION_OPEN_DOCUMENT : Intent.ACTION_GET_CONTENT;
+
+        intent.setAction(action);
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), IMAGE_REQUEST);
     }
 
@@ -514,7 +522,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPriceEditText.setText(String.valueOf(mPrice));
             mQuantityEditText.setText(String.valueOf(mQuantity));
             mImageView.setImageURI(mImageUri);
-            Log.e("TEST", "image uri is: " + mImageView);
         }
     }
 
