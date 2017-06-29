@@ -118,6 +118,12 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Quantity shouldn't be less than 0");
         }
 
+        String imageUri = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
+        if (imageUri == null) {
+            throw new IllegalArgumentException("Product must have an image");
+        }
+        Toast.makeText(getContext(), "The inserted product image uri is: " + imageUri, Toast.LENGTH_SHORT).show();
+
         // Get sqlite database for inserting data
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -132,7 +138,7 @@ public class ProductProvider extends ContentProvider {
             return null;
         }
 
-        Toast.makeText(getContext(), "The newly inserted product id is: " + id, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "The newly inserted product id is: " + id, Toast.LENGTH_SHORT).show();
 
         // Notify all listener that the data has been changed for products uri
         // content://com.example.omniata.inventoryapp/products/products

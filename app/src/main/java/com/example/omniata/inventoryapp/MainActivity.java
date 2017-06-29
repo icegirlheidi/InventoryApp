@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, "Hongkong co.");
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 2);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 20);
+        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, getString(R.string.dummy_data_image_uri));
 
         // Insert a new row of pencils into provider using ContentResolver
         getContentResolver().insert(ProductEntry.CONTENT_URI, values);

@@ -30,13 +30,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.omniata.inventoryapp.data.ProductContract;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
 import org.w3c.dom.Text;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    Uri imageUri;
+    Uri mImageUri;
     private ImageView mImageView;
     private EditText mNameEditText;
     private EditText mSupplierEditText;
@@ -83,6 +84,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText.setOnTouchListener(mOnTouchListener);
         mPriceEditText.setOnTouchListener(mOnTouchListener);
         mQuantityEditText.setOnTouchListener(mOnTouchListener);
+        mImageView.setOnTouchListener(mOnTouchListener);
+        mSelectImageButton.setOnTouchListener(mOnTouchListener);
 
         // Set on increase quantity click listener on plus button
         mPlusButton.setOnClickListener(mOnClickListenerIncreaseQuantity);
@@ -183,9 +186,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // If there is an intent passed in
             if (intent != null) {
                 // Get the data from intent
-                imageUri = intent.getData();
+                mImageUri = intent.getData();
                 // Set image uri to image view
-                mImageView.setImageURI(imageUri);
+                mImageView.setImageURI(mImageUri);
                 mImageView.invalidate();
             }
         }
@@ -252,6 +255,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, mSupplierString);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, mPrice);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, mQuantity);
+        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, String.valueOf(mImageUri));
 
         // If current product uri is null,
         // then it's in inserting new product mode
@@ -435,7 +439,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER,
                 ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductEntry.COLUMN_PRODUCT_QUANTITY
+                ProductEntry.COLUMN_PRODUCT_QUANTITY,
+                ProductEntry.COLUMN_PRODUCT_IMAGE
         };
         return new CursorLoader(
                 this,
@@ -457,12 +462,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSupplierString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
             mPrice = cursor.getDouble(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
             mQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+            mImageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)));
 
             // Set the value of name, supplier, price and quantity to edittext view
             mNameEditText.setText(mNameString);
             mSupplierEditText.setText(mSupplierString);
             mPriceEditText.setText(String.valueOf(mPrice));
             mQuantityEditText.setText(String.valueOf(mQuantity));
+            mImageView.setImageURI(mImageUri);
         }
     }
 
@@ -474,5 +481,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText.setText("");
         mPriceEditText.setText("");
         mQuantityEditText.setText("");
+        mImageView.setImageURI(null);
     }
 }
