@@ -170,15 +170,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // to read external storage
             int permissionCheck = ContextCompat.checkSelfPermission(EditorActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE);
-
             // If we don't have permission to read external storage
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 // Then we request the permission to read and write external storage
                 ActivityCompat.requestPermissions(EditorActivity.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                selectImage();
             }
-            selectImage();
         }
     };
 
@@ -304,7 +304,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // If current product uri is not null
             // then it's in editing mode
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
-            Toast.makeText(this, "Number of rows updated: " + rowsAffected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.product_modified_successfully), Toast.LENGTH_SHORT).show();
         }
         // Finish current activity and return to MainActivity
         finish();
@@ -314,7 +314,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void deleteProduct() {
         if (mCurrentProductUri != null) {
             getContentResolver().delete(mCurrentProductUri, null, null);
-            Log.e("TEST", "pet deleted: with uri: " + mCurrentProductUri);
             Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show();
             // Leave current activity after deleting current product
             finish();
@@ -466,7 +465,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.e("TEST", "onCreateLoader() initiated");
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,

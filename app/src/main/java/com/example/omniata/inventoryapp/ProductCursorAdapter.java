@@ -21,7 +21,7 @@ import org.w3c.dom.Text;
 
 public class ProductCursorAdapter extends CursorAdapter {
 
-    static class Holder {
+    public static class Holder {
         TextView mNameTextView;
         TextView mPriceTextView;
         TextView mQuantityTextView;

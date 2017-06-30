@@ -14,8 +14,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // Create new cursor adapter
         mProductCursorAdapter = new ProductCursorAdapter(this, null);
-        // Get the listview for showing a list of products
+        // Get the RecyclerView for showing a list of products
         ListView list = (ListView) findViewById(R.id.list_view);
 
         // Get empty view
