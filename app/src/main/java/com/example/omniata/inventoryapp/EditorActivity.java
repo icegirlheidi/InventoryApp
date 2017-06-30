@@ -109,8 +109,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             setTitle(getString(R.string.add_new_product));
         }
-
-        Log.e("TEST", "Initial mProductInputChanged value is: " + mProductInputChanged);
     }
 
     // On touch listener to listen whether any view has been changed
@@ -119,7 +117,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            Log.e("TEST", view + "is touched");
             mProductInputChanged = true;
             return false;
         }
@@ -130,12 +127,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         @Override
         public void onClick(View v) {
-            Log.e("TEST", "plus onclicklistener called");
             mQuantity++;
             mQuantityEditText.setText(String.valueOf(mQuantity));
             mProductInputChanged = true;
-            Log.e("TEST", "input has been changed");
-            Log.e("TEST", "mQuantity is: " + mQuantity);
         }
     };
 
@@ -143,13 +137,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnClickListener mOnClickListenerDecreaseQuantity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.e("TEST", "minus onclicklistener called");
             // Make sure the quantity is bigger than 0
             if (mQuantity > 0) {
                 mQuantity--;
                 mQuantityEditText.setText(String.valueOf(mQuantity));
                 mProductInputChanged = true;
-                Log.e("TEST", "input has been changed");
             } else if (mQuantity == 0) {
                 Toast.makeText(EditorActivity.this,
                         mNameString + getString(R.string.product_out_of_stock),
@@ -293,6 +285,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // And parse it as int
         mPrice = Double.parseDouble(priceString);
+        // Show toast message if user's input of price is less than 0
         if (mPrice < 0) {
             Toast.makeText(this, getString(R.string.toast_msg_price_less_than_zero), Toast.LENGTH_LONG).show();
             return;
@@ -300,6 +293,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // And parse it as int
         mQuantity = Integer.parseInt(quantityString);
+        // Show toast message if user's input of quantity is less than 0
         if (mQuantity < 0) {
             Toast.makeText(this, getString(R.string.toast_msg_quantity_less_than_zero), Toast.LENGTH_LONG).show();
             return;
@@ -410,6 +404,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Otherwise we order through messaging app
             Intent orderIntent = new Intent(Intent.ACTION_SEND);
             orderIntent.setType("text/plain");
+            orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
             orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
             startActivity(Intent.createChooser(orderIntent, "Order via"));
         }
