@@ -17,7 +17,7 @@
             android:id="@+id/list_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:textAppearance="?android:textAppearanceLarge"
             tools:text="Pencil" />
 
@@ -25,7 +25,7 @@
             android:id="@+id/list_item_unit_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:textAppearance="?android:textAppearanceSmall"
             android:paddingTop="6dp"
             tools:text="1 € / piece" />
@@ -48,5 +48,6 @@
         android:layout_gravity="center"
         android:background="@drawable/ic_remove_circle_outline_black_24dp"
         android:focusable="false"
-        android:focusableInTouchMode="false"/>
+        android:focusableInTouchMode="false"
+        android:contentDescription="@string/decrease_quantity_description"/>
 </LinearLayout>

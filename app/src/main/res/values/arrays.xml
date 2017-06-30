@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="category_spinner_options">
-        <item>@string/food</item>
-        <item>@string/clothes</item>
-        <item>@string/consumer_goods</item>
-        <item>@string/others</item>
-    </string-array>
-</resources>

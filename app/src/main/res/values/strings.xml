@@ -34,35 +34,20 @@
     <!--Hint of name for editor activity [CHAR LIMIT=15]-->
     <string name="name_hint">Name</string>
 
-    <!-- Category title for editor activity [CHAR LIMIT=30]-->
-    <string name="category_title">Category</string>
-
-    <!--Category options for editor activity [CHAR LIMIT=30]-->
-    <string name="food">Food</string>
-    <string name="clothes">Clothes</string>
-    <string name="consumer_goods">Consumer goods</string>
-    <string name="others">Others</string>
-
     <!-- Measurement title for editor activity [CHAR LIMIT=30]-->
     <string name="measurement_title">Measurement</string>
 
     <!--Hint of quantity for editor activity [CHAR LIMIT=15]-->
     <string name="quantity_hint">Quantity</string>
 
-    <!--Hint of price for editor activity [CHAR LIMIT=30]-->
-    <string name="unit_price_hint">Unit Price</string>
-
-    <!--Units of quantity for editor activity [CHAR LIMIT=30]-->
-    <string name="quantity_units_pieces">Pieces</string>
-
     <!-- Units for price of the product (€) [CHAR LIMIT=5] -->
     <string name="price_units_euros">€</string>
 
+    <!--Hint of price for editor activity [CHAR LIMIT=15]-->
+    <string name="unit_price_hint">Unit price</string>
+
     <!--Hint of supplier for editor activity [CHAR LIMIT=15]-->
     <string name="supplier_hint">Supplier</string>
-
-    <!--Hint of picture for editor activity [CHAR LIMIT=15]-->
-    <string name="picture_hint">Picture</string>
 
     <!-- Image title for editor activity [CHAR LIMIT=30]-->
     <string name="image_title">Image</string>
@@ -76,7 +61,7 @@
     <!--Title for delete confirmation dialog for all products-->
     <string name="delete_all_message">Do you really want to delete ALL products?</string>
 
-    <!--Yes for delete confiramtion dialog-->
+    <!--Yes for delete confirmation dialog-->
     <string name="delete_delete_confirmation">Delete</string>
 
     <!--Cancel for delete confirmation dialog-->
@@ -108,6 +93,7 @@
 
     <!--Toast message for empty product name-->
     <string name="toast_msg_empty_name">Product must have a name</string>
+
     <!--Toast message for empty product supplier-->
     <string name="toast_msg_empty_supplier">Product must have a supplier</string>
 
@@ -129,10 +115,22 @@
     <!--Toast message warning user product is out of stock-->
     <string name="product_out_of_stock"> out of stock</string>
 
-    <!--Toast message telling user new product addded successfully-->
+    <!--Toast message telling user new product added successfully-->
     <string name="new_product_added_successfully">New product added</string>
 
     <!--Toast message telling user product modified successfully-->
     <string name="product_modified_successfully">Product saved</string>
+
+    <!--Content description for empty view-->
+    <string name="empty_view_description">This shows up where there is no list</string>
+
+    <!--Content description for minus button used to decrease product quantity-->
+    <string name="decrease_quantity_description">This button is used to decrease product quantity</string>
+
+    <!--Content description for plus button used to increase product quantity-->
+    <string name="increase_quantity_description">This button is used to increase product quantity</string>
+
+    <!--Content description for product image-->
+    <string name="product_image">Here shows up the product image</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,11 +21,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
-import com.example.omniata.inventoryapp.data.ProductDbHelper;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    ProductCursorAdapter mProductCursorAdapter;
+    private ProductCursorAdapter mProductCursorAdapter;
 
     // A unique identifier for this loader.
     // Identifiers are scoped to a particular LoaderManager instance.
@@ -49,10 +47,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        // Read a database
-        ProductDbHelper mDbHelper = new ProductDbHelper(this);
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         // Create new cursor adapter
         mProductCursorAdapter = new ProductCursorAdapter(this, null);
         // Get the RecyclerView for showing a list of products
@@ -63,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Set empty view to list
         list.setEmptyView(emptyView);
 
-        // Set up cursor adapter with listview
+        // Set up cursor adapter with ListView
         list.setAdapter(mProductCursorAdapter);
 
         // Start the loader

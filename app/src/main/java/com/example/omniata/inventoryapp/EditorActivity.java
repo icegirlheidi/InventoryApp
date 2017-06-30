@@ -30,26 +30,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.omniata.inventoryapp.data.ProductContract;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
-
-import org.w3c.dom.Text;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    Uri mImageUri;
+    private Uri mImageUri;
     private ImageView mImageView;
     private EditText mNameEditText;
     private EditText mSupplierEditText;
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
-    private ImageButton mPlusButton;
-    private ImageButton mMinusButton;
     private Uri mCurrentProductUri;
-    private Button mSelectImageButton;
 
     private static final int LOADER_ID = 0;
 
@@ -76,26 +69,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText = (EditText) findViewById(R.id.product_supplier);
         mPriceEditText = (EditText) findViewById(R.id.product_unit_price);
         mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
-        mPlusButton = (ImageButton) findViewById(R.id.add_button);
-        mMinusButton = (ImageButton) findViewById(R.id.minus_button);
-        mSelectImageButton = (Button) findViewById(R.id.select_image_button);
+        ImageButton plusButton = (ImageButton) findViewById(R.id.add_button);
+        ImageButton minusButton = (ImageButton) findViewById(R.id.minus_button);
+        Button selectImageButton = (Button) findViewById(R.id.select_image_button);
 
-        // Set on touch listener on all edittext view
+        // Set on touch listener on all EditText view
         // so that we can know whether they're modified
         mNameEditText.setOnTouchListener(mOnTouchListener);
         mSupplierEditText.setOnTouchListener(mOnTouchListener);
         mPriceEditText.setOnTouchListener(mOnTouchListener);
         mQuantityEditText.setOnTouchListener(mOnTouchListener);
         mImageView.setOnTouchListener(mOnTouchListener);
-        mSelectImageButton.setOnTouchListener(mOnTouchListener);
+        selectImageButton.setOnTouchListener(mOnTouchListener);
 
         // Set on increase quantity click listener on plus button
-        mPlusButton.setOnClickListener(mOnClickListenerIncreaseQuantity);
+        plusButton.setOnClickListener(mOnClickListenerIncreaseQuantity);
         // Set on decrease quantity click listener on minus button
-        mMinusButton.setOnClickListener(mOnClickListenerDecreaseQuantity);
+        minusButton.setOnClickListener(mOnClickListenerDecreaseQuantity);
 
         // Set on select image click listener on select image button
-        mSelectImageButton.setOnClickListener(mOnClickListenerSelectImage);
+        selectImageButton.setOnClickListener(mOnClickListenerSelectImage);
 
         // Get the current product uri passed through intent from MainActivity
         mCurrentProductUri = getIntent().getData();
@@ -174,8 +167,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 // Then we request the permission to read and write external storage
                 ActivityCompat.requestPermissions(EditorActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
             } else {
                 selectImage();
             }
@@ -288,6 +280,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
+        if (mImageUri == null) {
+            Toast.makeText(this, getString(R.string.toast_msg_empty_image), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, mNameString);
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER, mSupplierString);
@@ -299,11 +296,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // then it's in inserting new product mode
         if (mCurrentProductUri == null) {
             // Insert user's input as a new row into provider using ContentResolver
-            Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+            getContentResolver().insert(ProductEntry.CONTENT_URI, values);
         } else {
             // If current product uri is not null
             // then it's in editing mode
-            int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
+            getContentResolver().update(mCurrentProductUri, values, null, null);
             Toast.makeText(this, getString(R.string.product_modified_successfully), Toast.LENGTH_SHORT).show();
         }
         // Finish current activity and return to MainActivity
@@ -322,7 +319,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Show dialog if user pressed delete button
     private void showDeleteConfirmationDialog() {
-        // Create alertdialog builder
+        // Create AlertDialog builder
         // which makes the needed info for creating alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.delete_confirmation_message));
@@ -374,6 +371,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Order current product through email or messaging app
     private void orderProduct() {
+        Intent orderIntent;
         //orderIntent.setType("text/plain");
         String productsToOrder = getString(R.string.order_product_message) + "\n\n"
                 + getString(R.string.name_hint) + ": " + mNameString + "\n"
@@ -383,18 +381,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If we have supplier's email in our database
         // then we order through email
         if (mEmail != null) {
-            Intent orderIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "icegirlheidi@gmail.com"));
-            orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
-            orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
-            startActivity(Intent.createChooser(orderIntent, "Order via"));
+            orderIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + mEmail));
         } else {
             // Otherwise we order through messaging app
-            Intent orderIntent = new Intent(Intent.ACTION_SEND);
+            orderIntent = new Intent(Intent.ACTION_SEND);
             orderIntent.setType("text/plain");
-            orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
-            orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
-            startActivity(Intent.createChooser(orderIntent, "Order via"));
         }
+        orderIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+        orderIntent.putExtra(Intent.EXTRA_TEXT, productsToOrder);
+        startActivity(Intent.createChooser(orderIntent, "Order via"));
+
     }
 
     @Override
@@ -493,7 +489,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
             mImageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)));
 
-            // Set the value of name, supplier, price and quantity to edittext view
+            // Set the value of name, supplier, price and quantity to EditText view
             mNameEditText.setText(mNameString);
             mSupplierEditText.setText(mSupplierString);
             mPriceEditText.setText(String.valueOf(mPrice));

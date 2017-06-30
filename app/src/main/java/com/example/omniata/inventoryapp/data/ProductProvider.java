@@ -9,19 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.omniata.inventoryapp.R;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
-import org.w3c.dom.Text;
-
 public class ProductProvider extends ContentProvider {
-    /**
-     * Log tag for log purpose
-     */
-    private static final String LOG_TAG = ProductProvider.class.getName();
 
     private ProductDbHelper mDbHelper;
     /**
@@ -36,7 +29,6 @@ public class ProductProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mDbHelper = new ProductDbHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
         return true;
     }
 
@@ -44,7 +36,7 @@ public class ProductProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor;
-        // Get a readable sqlite database
+        // Get a readable SQLite database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         // Create a uri matcher
         final int match = sUriMatcher.match(uri);
@@ -108,12 +100,15 @@ public class ProductProvider extends ContentProvider {
         }
 
         String imageUri = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
+        if (imageUri == null) {
+            throw new IllegalArgumentException("Product must have an image");
+        }
 
-        // Get sqlite database for inserting data
+        // Get SQLite database for inserting data
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // An id with the type long is returned
-        // from inserting data into sqlite database
+        // from inserting data into SQLite database
         long id = db.insert(ProductEntry.TABLE_NAME, null, values);
 
         // Create log if failed to insert a row of product
@@ -157,7 +152,7 @@ public class ProductProvider extends ContentProvider {
         }
         // Return the number of rows deleted
         return rowDeleted;
-    };
+    }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {

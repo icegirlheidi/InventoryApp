@@ -8,7 +8,7 @@ import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 
 public class ProductDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "inventory.db";
 
     public ProductDbHelper(Context context) {
@@ -25,7 +25,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                         ProductEntry.COLUMN_PRODUCT_SUPPLIER + " TEXT NOT NULL, " +
                         ProductEntry.COLUMN_PRODUCT_PRICE + " REAL NOT NULL DEFAULT 0, " +
                         ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, " +
-                        ProductEntry.COLUMN_PRODUCT_IMAGE + " TEXT);";
+                        ProductEntry.COLUMN_PRODUCT_IMAGE + " TEXT NOT NULL);";
         db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
     }
 

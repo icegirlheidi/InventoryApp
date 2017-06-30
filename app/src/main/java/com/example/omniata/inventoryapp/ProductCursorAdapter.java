@@ -1,11 +1,9 @@
 package com.example.omniata.inventoryapp;
 
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.omniata.inventoryapp.data.ProductContract;
 import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
-
-import org.w3c.dom.Text;
 
 public class ProductCursorAdapter extends CursorAdapter {
 
@@ -66,13 +61,13 @@ public class ProductCursorAdapter extends CursorAdapter {
         holder.mSaleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get current value of quantity in quantity textview
+                // Get current value of quantity in quantity TextView
                 int currentQuantity = Integer.parseInt(holder.mQuantityTextView.getText().toString().trim());
                 // Do this if quantity is larger than zero
                 if (currentQuantity > 0) {
                     // Decrease quantity by one
                     currentQuantity--;
-                    // Set the decreased value of quantity to quantity textview
+                    // Set the decreased value of quantity to quantity TextView
                     holder.mQuantityTextView.setText(String.valueOf(currentQuantity));
                     // Create new ContentValue
                     ContentValues values = new ContentValues();
