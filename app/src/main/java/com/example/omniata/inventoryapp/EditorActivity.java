@@ -66,7 +66,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Request code created from image request
     private static final int IMAGE_REQUEST = 0;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,18 +238,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void saveProduct() {
         // Get user's input of product name and remove possible space before of after it
         mNameString = mNameEditText.getText().toString().trim();
-
         // Get user's input of product supplier and remove possible space before of after it
         mSupplierString = mSupplierEditText.getText().toString().trim();
-
         // Get user's input of product price
         // Remove possible space before or after it
         String priceString = mPriceEditText.getText().toString().trim();
-
         // Get user's input of product quantity
         // Remove possible space before or after it
         String quantityString = mQuantityEditText.getText().toString().trim();
-
         // If no input has been typed, then return
         if (TextUtils.isEmpty(mNameString) && TextUtils.isEmpty(mSupplierString)
                 && TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString)
@@ -258,31 +253,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             finish();
             return;
         }
-
         // Show toast message if user's input of name is empty
         if (TextUtils.isEmpty(mNameString)) {
             Toast.makeText(this, getString(R.string.toast_msg_empty_name), Toast.LENGTH_LONG).show();
             return;
         }
-
         // Show toast message if user's input of supplier is empty
         if (TextUtils.isEmpty(mSupplierString)) {
             Toast.makeText(this, getString(R.string.toast_msg_empty_supplier), Toast.LENGTH_LONG).show();
             return;
         }
-
         // Show toast message if user's input of price is empty
         if (TextUtils.isEmpty(priceString)) {
             Toast.makeText(this, getString(R.string.toast_msg_empty_price), Toast.LENGTH_LONG).show();
             return;
         }
-
         // Show toast message if user's input of quantity is empty
         if (TextUtils.isEmpty(quantityString)) {
             Toast.makeText(this, getString(R.string.toast_msg_empty_quantity), Toast.LENGTH_LONG).show();
             return;
         }
-
         // And parse it as int
         mPrice = Double.parseDouble(priceString);
         // Show toast message if user's input of price is less than 0
@@ -290,7 +280,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(this, getString(R.string.toast_msg_price_less_than_zero), Toast.LENGTH_LONG).show();
             return;
         }
-
         // And parse it as int
         mQuantity = Integer.parseInt(quantityString);
         // Show toast message if user's input of quantity is less than 0
@@ -323,7 +312,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Delete current product
     private void deleteProduct() {
-
         if (mCurrentProductUri != null) {
             getContentResolver().delete(mCurrentProductUri, null, null);
             Log.e("TEST", "pet deleted: with uri: " + mCurrentProductUri);
@@ -412,7 +400,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         super.onPrepareOptionsMenu(menu);
         // If current product uri is null
         // then it's in adding new product mode
@@ -422,7 +409,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Then we don't need the delete product item in menu
             menuItemDelete.setVisible(false);
             menuItemOrder.setVisible(false);
-
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             invalidateOptionsMenu();
         }
@@ -500,10 +486,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         // If the cursor has first row, then move to the first row
         if (cursor.moveToFirst()) {
-
             // Get the value of name, supplier, price and quantity from cursor
             mNameString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
             mSupplierString = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER));
@@ -522,7 +506,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
         // Clear and reset all EditText view in EditorActivity
         mNameEditText.setText("");
         mSupplierEditText.setText("");

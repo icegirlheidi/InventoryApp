@@ -17,7 +17,6 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         // CREATE TABLE products (_id INTEGER, name TEXT, supplier TEXT, price INTEGER, quantity INTEGER);
         String SQL_CREATE_PRODUCTS_TABLE =
                 "CREATE TABLE " + ProductEntry.TABLE_NAME + "(" +

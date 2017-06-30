@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
     }
 
-
     // Insert method of dummy data
     private void insertProduct() {
         ContentValues values = new ContentValues();

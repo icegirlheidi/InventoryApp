@@ -129,4 +129,7 @@
     <!--Toast message warning user product is out of stock-->
     <string name="product_out_of_stock"> out of stock</string>
 
+    <!--Toast message telling user new product addded successfully-->
+    <string name="new_product_added_successfully">New product added successfully</string>
+
 </resources>

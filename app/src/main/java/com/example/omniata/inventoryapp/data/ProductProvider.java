@@ -18,24 +18,21 @@ import com.example.omniata.inventoryapp.data.ProductContract.ProductEntry;
 import org.w3c.dom.Text;
 
 public class ProductProvider extends ContentProvider {
-
     /**
      * Log tag for log purpose
      */
     private static final String LOG_TAG = ProductProvider.class.getName();
 
     private ProductDbHelper mDbHelper;
-
     /**
      * URI matcher code for the content URI for the products table
      */
     private static final int PRODUCTS = 100;
-
     /**
      * URI matcher code for the content URI for a single product
      */
-
     private static final int PRODUCT_ID = 101;
+
     @Override
     public boolean onCreate() {
         mDbHelper = new ProductDbHelper(getContext());
@@ -47,10 +44,8 @@ public class ProductProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor;
-
         // Get a readable sqlite database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         // Create a uri matcher
         final int match = sUriMatcher.match(uri);
         switch (match) {
@@ -67,12 +62,9 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI: " + uri);
         }
-
         // Set notification uri on cursor
         // If the data at URI changes, we will update the cursor
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
-
         // Return the whole product table or a row of product
         return cursor;
     }
@@ -81,7 +73,6 @@ public class ProductProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
-
         // Call insertProduct method when the content uri matches
         // content://com.example.omniata.inventoryapp/products
         switch (match) {
@@ -92,12 +83,10 @@ public class ProductProvider extends ContentProvider {
     }
 
     private Uri insertProduct(Uri uri, ContentValues values) {
-
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         // Check if user's input of name is empty
         if (TextUtils.isEmpty(name)) {
             throw new IllegalArgumentException("Product must have name");
-
         }
 
         String supplier = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER);
@@ -119,7 +108,6 @@ public class ProductProvider extends ContentProvider {
         }
 
         String imageUri = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
-        Toast.makeText(getContext(), "The inserted product image uri is: " + imageUri, Toast.LENGTH_SHORT).show();
 
         // Get sqlite database for inserting data
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -131,16 +119,13 @@ public class ProductProvider extends ContentProvider {
         // Create log if failed to insert a row of product
         // If failed to insert, then the id will be -1
         if (id == -1) {
-            Log.e(LOG_TAG, "Insert data faild for uri: " + uri);
             return null;
         }
-
-        //Toast.makeText(getContext(), "The newly inserted product id is: " + id, Toast.LENGTH_SHORT).show();
-
         // Notify all listener that the data has been changed for products uri
         // content://com.example.omniata.inventoryapp/products/products
         getContext().getContentResolver().notifyChange(uri,null);
-
+        // Toast message telling user new product added successfully
+        Toast.makeText(getContext(), getContext().getString(R.string.new_product_added_successfully), Toast.LENGTH_SHORT).show();
         // Return content uri with the id of the newly added row at the end
         return ContentUris.withAppendedId(uri, id);
     }
@@ -164,17 +149,12 @@ public class ProductProvider extends ContentProvider {
 
     private int deletePet(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         int rowDeleted = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
-
         // If more than zero rows are deleted, then notify listener all listeners
         // that the data has been changed for product uri
-
-        Log.e("TEST", "Id of rows deleted: " + rowDeleted);
         if(rowDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri,null);
         }
-
         // Return the number of rows deleted
         return rowDeleted;
     };
@@ -195,16 +175,11 @@ public class ProductProvider extends ContentProvider {
     }
 
     private int updateTable(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-
-
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Update products database
         int rowsAffected = db.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
-
         // Notify changes so the ui in MainActivity will be updated automatically
         getContext().getContentResolver().notifyChange(uri, null);
-
         // Return number of rows affected
         return rowsAffected;
     }
@@ -227,7 +202,6 @@ public class ProductProvider extends ContentProvider {
     static {
         // The content uri is: content:// com.example.omniata.inventoryapp.products/products
         sUriMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_PRODUCTS, PRODUCTS);
-
         // The content uri is: content:// com.example.omniata.inventoryapp.products/products/#
         sUriMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_PRODUCTS + "/#", PRODUCT_ID);
     }
