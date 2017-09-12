@@ -278,6 +278,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mQuantity < 0) {
             Toast.makeText(this, getString(R.string.toast_msg_quantity_less_than_zero), Toast.LENGTH_LONG).show();
             return;
+        } else if (mQuantity > 500) {
+            // Show toast message if quantity value is more than 500
+            Toast.makeText(this, getString(R.string.toast_msg_quantity_more_than_limit), Toast.LENGTH_LONG).show();
         }
 
         if (mImageUri == null) {
@@ -427,8 +430,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.delete_product:
                 // Show dialog for user to confirm deleting
                 showDeleteConfirmationDialog();
-                // Close current activity and return to MainActivity
-                //finish();
                 return true;
             case R.id.order_product:
                 // Order product

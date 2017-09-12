@@ -109,6 +109,9 @@
     <!--Toast message for product's quantity less than zero-->
     <string name="toast_msg_quantity_less_than_zero">Product\'s quantity cannot be less than zero</string>
 
+    <!--Toast message for product's quantity more than 500-->
+    <string name="toast_msg_quantity_more_than_limit">Quantity value more than 500 is out of scope</string>
+
     <!--Toast message for empty product image-->
     <string name="toast_msg_empty_image">Product must have an image</string>
 

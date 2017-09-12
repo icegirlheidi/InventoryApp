@@ -97,6 +97,8 @@ public class ProductProvider extends ContentProvider {
         // Check if user's input of quantity is smaller than 0
         if(quantity != null && quantity < 0) {
             throw new IllegalArgumentException("Product's quantity shouldn't be less than zero");
+        } else if (quantity != null && quantity >500) {
+            throw new IllegalArgumentException("Quantity value more than 500 is out of scope");
         }
 
         String imageUri = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
@@ -131,18 +133,18 @@ public class ProductProvider extends ContentProvider {
         switch (match) {
             // If uri matches products uri, then delete the whole table
             case PRODUCTS:
-                return deletePet(uri, selection, selectionArgs);
+                return deleteProduct(uri, selection, selectionArgs);
             // If uri matches a single product, then delete a single row of product
             case PRODUCT_ID:
                 selection = ProductEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                return deletePet(uri, selection, selectionArgs);
+                return deleteProduct(uri, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Delete is not supported for uri: " + uri);
         }
     }
 
-    private int deletePet(Uri uri, String selection, String[] selectionArgs) {
+    private int deleteProduct(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int rowDeleted = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
         // If more than zero rows are deleted, then notify listener all listeners
