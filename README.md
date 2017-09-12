@@ -5,7 +5,7 @@ The purpose of this app is to help managing inventory for small business.
 Sqlitedatabase is used to store data.
 It's possible for user to add new product, modify info of existed product, delete product and order more product.
 
-Inside the app, it uses these query methods such as **query**, **delete**, **insert** and **update**.
+Inside the app, it uses these methods such as **query**, **delete**, **insert** and **update**.
 
 ## Screenshots
 
